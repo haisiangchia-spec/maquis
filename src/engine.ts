@@ -1,34 +1,40 @@
 /** First vertical slice. See README for intentionally simplified mechanics. */
 export type Resource = 'food' | 'money' | 'medicine' | 'intel' | 'weapon';
 export type Phase = 'placement' | 'action' | 'ended';
-export type LocationId = 'north'|'poor'|'market'|'bridge'|'street'|'radioA'|'radioB'|'grocer'|'fence'|'doctor'|'cafe'|'fieldA'|'fieldB'|'roomA'|'roomB'|'roomC'|'missionA'|'missionB';
+export type LocationId = 'north'|'poor'|'market'|'bridge'|'street'|'radioA'|'radioB'|'grocer'|'fence'|'doctor'|'cafe'|'fieldA'|'fieldB'|'roomA'|'roomB'|'roomC'|'missionA'|'missionB'|'safeHouse';
 export interface Location { id:LocationId; name:string; x:number; y:number; detail:string; resource?:Resource; }
 export const LOCATIONS:Location[] = [
-  {id:'north',name:'Pont du Nord',x:23,y:12,detail:'North bridge'},
-  {id:'poor',name:'Poor District',x:47,y:13,detail:'Gain food',resource:'food'},
-  {id:'market',name:'Black Market',x:77,y:14,detail:'Trade 1 money for a weapon'},
-  {id:'bridge',name:'Pont Leveque',x:17,y:35,detail:'Bridge'},
-  {id:'street',name:'Rue Baradat',x:51,y:37,detail:'Crossroads'},
-  {id:'radioA',name:'Radio A',x:79,y:37,detail:'Gain intel',resource:'intel'},
-  {id:'grocer',name:'Grocer',x:24,y:57,detail:'Gain food',resource:'food'},
-  {id:'fence',name:'Fence',x:55,y:58,detail:'Trade 1 food for 1 money'},
-  {id:'doctor',name:'Doctor',x:82,y:61,detail:'Gain medicine',resource:'medicine'},
-  {id:'fieldA',name:'Field A',x:13,y:77,detail:'Field (placeholder)'},
-  {id:'cafe',name:'Café',x:35,y:77,detail:'Recruit a resistance worker (spend 1 food)'},
-  {id:'roomA',name:'Spare Room A',x:58,y:78,detail:'Restore morale (spend 1 medicine)'},
-  {id:'radioB',name:'Radio B',x:82,y:80,detail:'Gain intel',resource:'intel'},
-  {id:'fieldB',name:'Field B',x:12,y:94,detail:'Field (placeholder)'},
-  {id:'roomB',name:'Spare Room B',x:57,y:94,detail:'Placeholder location'},
-  {id:'roomC',name:'Spare Room C',x:81,y:95,detail:'Placeholder location'},
+  {id:'north',name:'Pont du Nord',x:59.0,y:13.6,detail:'North bridge'},
+  {id:'poor',name:'Poor District',x:51.1,y:35.9,detail:'Gain food',resource:'food'},
+  {id:'market',name:'Black Market',x:71.3,y:35.5,detail:'Trade 1 money for a weapon'},
+  {id:'bridge',name:'Pont Leveque',x:51.3,y:62.9,detail:'Bridge'},
+  {id:'street',name:'Rue Baradat',x:15.7,y:27.2,detail:'Crossroads'},
+  {id:'radioA',name:'Radio A',x:15.4,y:51.0,detail:'Gain intel',resource:'intel'},
+  {id:'grocer',name:'Grocer',x:72.3,y:63.3,detail:'Gain food',resource:'food'},
+  {id:'fence',name:'Fence',x:35.0,y:13.6,detail:'Trade 1 food for 1 money'},
+  {id:'doctor',name:'Doctor',x:34.4,y:36.1,detail:'Gain medicine',resource:'medicine'},
+  {id:'fieldA',name:'Field A',x:17.1,y:86.7,detail:'Field (placeholder)'},
+  {id:'cafe',name:'Café',x:38.6,y:86.3,detail:'Recruit a resistance worker (spend 1 food)'},
+  {id:'roomA',name:'Spare Room A',x:31.7,y:64.3,detail:'Restore morale (spend 1 medicine)'},
+  {id:'radioB',name:'Radio B',x:86.0,y:14.4,detail:'Gain intel',resource:'intel'},
+  {id:'fieldB',name:'Field B',x:76.5,y:86.4,detail:'Field (placeholder)'},
+  {id:'roomB',name:'Spare Room B',x:87.4,y:65.2,detail:'Placeholder location'},
+  {id:'roomC',name:'Spare Room C',x:89.3,y:40.9,detail:'Placeholder location'},
   {id:'missionA',name:'Mission A',x:9,y:11,detail:'Spend 2 food and 1 medicine to complete Supply Run'},
-  {id:'missionB',name:'Mission B',x:91,y:11,detail:'Spend 2 intel and 1 money to complete Radio Network'}
+  {id:'missionB',name:'Mission B',x:91,y:11,detail:'Spend 2 intel and 1 money to complete Radio Network'},
+  {id:'safeHouse',name:'Safe House',x:58.0,y:86.4,detail:'Safe House — prototype escape destination'}
 ];
 // Prototype connectivity: intentionally not yet a verified transcription of the printed road graph.
 export const EDGES: [LocationId,LocationId][] = [
-  ['missionA','north'],['missionB','market'],['north','poor'],['poor','market'],['north','bridge'],['poor','street'],['market','radioA'],
-  ['bridge','street'],['street','radioA'],['bridge','grocer'],['street','fence'],['radioA','doctor'],['grocer','fence'],['fence','doctor'],
-  ['grocer','fieldA'],['grocer','cafe'],['fence','cafe'],['fence','roomA'],['doctor','radioB'],['roomA','radioB'],
-  ['fieldA','fieldB'],['fieldA','cafe'],['cafe','roomA'],['roomA','roomB'],['radioB','roomC'],['roomB','roomC'],['fieldB','roomB']
+  ['street','fence'],['street','doctor'],['street','radioA'],
+  ['fence','north'],['fence','poor'],['north','poor'],['north','market'],['north','radioB'],
+  ['doctor','radioA'],['doctor','poor'],['doctor','roomA'],['doctor','bridge'],
+  ['poor','market'],['poor','bridge'],['market','radioB'],['market','roomC'],['market','grocer'],
+  ['radioA','roomA'],['roomA','bridge'],['bridge','grocer'],['bridge','safeHouse'],
+  ['grocer','roomB'],['grocer','safeHouse'],['roomC','radioB'],['roomB','fieldB'],
+  ['fieldA','cafe'],['cafe','safeHouse'],['safeHouse','fieldB'],
+  // Tutorial-only mission targets are not printed physical locations.
+  ['missionA','street'],['missionB','market']
 ];
 // Transcribed location priorities from the 2021 rulebook patrol summary, page 10.
 export const PATROL_CARDS:LocationId[][] = [
@@ -48,9 +54,9 @@ export function newGame(rng:()=>number=Math.random):State {return {day:1,morale:
 export const minPatrols=(morale:number)=>morale>=7?2:morale>=5?3:morale>=2?4:5;
 export function blocked(s:State,id:LocationId){return s.workers.includes(id)||s.patrols.some(p=>p.at===id);}
 export function hasEscape(s:State,from:LocationId){
-  // The safe house is represented as a connection to Café in this prototype.
+  // The printed Safe House is represented explicitly on the board.
   const visited=new Set<LocationId>([from]);const queue=[from];
-  while(queue.length){const current=queue.shift()!;if(current==='cafe')return true;
+  while(queue.length){const current=queue.shift()!;if(current==='safeHouse')return true;
     for(const [a,b] of EDGES){const n=a===current?b:b===current?a:null;if(n&&!visited.has(n)&&!s.patrols.some(p=>p.at===n)){visited.add(n);queue.push(n);}}
   }return false;
 }
@@ -72,7 +78,7 @@ export function placePatrol(s:State,rng:()=>number=Math.random){
 export function nameOf(id:LocationId){return LOCATIONS.find(l=>l.id===id)?.name??id;}
 export function placeWorker(s:State,id:LocationId,rng:()=>number=Math.random){
  if(s.phase!=='placement')return false;
- if(blocked(s,id)||id==='fieldA'||id==='fieldB'||id==='roomB'||id==='roomC'||id==='cafe'&&s.totalWorkers>=5)return false;
+ if(blocked(s,id)||id==='fieldA'||id==='fieldB'||id==='roomB'||id==='roomC'||id==='safeHouse'||id==='cafe'&&s.totalWorkers>=5)return false;
  if(s.workers.length>=s.totalWorkers)return false;
  s.workers.push(id);note(s,`Worker placed at ${nameOf(id)}.`);
  if(s.patrolDone<s.patrolTarget)placePatrol(s,rng);
@@ -95,7 +101,7 @@ export function activate(s:State,id:LocationId,action:'perform'|'skip'='perform'
    else if(id==='missionA'&&!s.missions[0]&&r.food>=2&&r.medicine>=1){r.food-=2;r.medicine--;s.missions[0]=true;note(s,'Prototype mission completed: Supply Run.');}
    else if(id==='missionB'&&!s.missions[1]&&r.intel>=2&&r.money>=1){r.intel-=2;r.money--;s.missions[1]=true;note(s,'Prototype mission completed: Radio Network.');}
    else note(s,`No available action at ${loc.name} (or required resources missing).`);
- }else if(!escape){s.totalWorkers--;note(s,`Worker arrested at ${loc.name}: no clear route to the prototype safe house (Café).`);}
+ }else if(!escape){s.totalWorkers--;note(s,`Worker arrested at ${loc.name}: no clear route to the Safe House.`);}
  else note(s,`Skipped action at ${loc.name}.`);
  s.workers=s.workers.filter(w=>w!==id);checkEnd(s);
  if(s.phase==='action'&&s.workers.length===0)advanceDay(s);
@@ -112,7 +118,7 @@ export function advanceDay(s:State){
  s.day++;s.patrols=[];s.workers=[];s.shotToday=false;
  // Orange day-space transcription to be verified against published board.
  if([4,7,10,13].includes(s.day)){s.morale--;note(s,`Day ${s.day}: morale −1 (prototype calendar).`);}
- checkEnd(s);if(s.outcome !== null)return;
+ checkEnd(s);if(s.phase==='ended')return;
  s.phase='placement';s.patrolDone=0;s.patrolTarget=Math.max(s.totalWorkers,minPatrols(s.morale));
  note(s,`Day ${s.day} begins. ${s.patrolTarget} patrols expected.`);
 }
