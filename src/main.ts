@@ -9,7 +9,7 @@ const MISSION_ART = [
   ['sabotage','Sabotage'],['underground-newspaper','Underground Newspaper']
 ] as const;
 const artKey='maquis-mission-art-v1';
-let missionArt:[string,string]=(()=>{try{const v=JSON.parse(localStorage.getItem(artKey)||'null');if(Array.isArray(v)&&v.length===2&&v.every((x:unknown)=>MISSION_ART.some(a=>a[0]===x)))return v;}catch{}return ['aid-the-spy','sabotage'];})();
+let missionArt:[string,string]=(()=>{try{const v=JSON.parse(localStorage.getItem(artKey)||'null');if(Array.isArray(v)&&v.length===2&&v.every((x:unknown)=>MISSION_ART.some(a=>a[0]===x)))return [v[0] as string,v[1] as string];}catch{}return ['aid-the-spy','sabotage'];})();
 
 const app=document.getElementById('app')!;
 const escapeHtml=(v:string)=>v.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
