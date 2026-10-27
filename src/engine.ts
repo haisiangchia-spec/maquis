@@ -112,7 +112,7 @@ export function advanceDay(s:State){
  s.day++;s.patrols=[];s.workers=[];s.shotToday=false;
  // Orange day-space transcription to be verified against published board.
  if([4,7,10,13].includes(s.day)){s.morale--;note(s,`Day ${s.day}: morale −1 (prototype calendar).`);}
- checkEnd(s);if(s.phase==='ended')return;
+ checkEnd(s);if(s.outcome !== null)return;
  s.phase='placement';s.patrolDone=0;s.patrolTarget=Math.max(s.totalWorkers,minPatrols(s.morale));
  note(s,`Day ${s.day} begins. ${s.patrolTarget} patrols expected.`);
 }
