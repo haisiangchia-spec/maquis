@@ -34,7 +34,7 @@ export const EDGES: [LocationId,LocationId][] = [
   ['grocer','roomB'],['grocer','safeHouse'],['roomC','radioB'],['roomB','fieldB'],
   ['fieldA','cafe'],['cafe','safeHouse'],['safeHouse','fieldB'],
   // Tutorial-only mission targets are not printed physical locations.
-  ['missionA','street'],['missionB','market']
+  ['missionA','fence'],['missionB','north']
 ];
 // Transcribed location priorities from the 2021 rulebook patrol summary, page 10.
 export const PATROL_CARDS:LocationId[][] = [
